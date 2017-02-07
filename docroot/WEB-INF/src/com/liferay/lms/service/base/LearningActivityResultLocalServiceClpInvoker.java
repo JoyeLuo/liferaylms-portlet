@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -194,13 +194,17 @@ public class LearningActivityResultLocalServiceClpInvoker {
 
 		_methodParameterTypes161 = new String[] { "long" };
 
-		_methodName162 = "getByActId";
+		_methodName162 = "getLastEndDateByUserIdCourseId";
 
-		_methodParameterTypes162 = new String[] { "long" };
+		_methodParameterTypes162 = new String[] { "long", "long" };
 
-		_methodName163 = "translateResult";
+		_methodName163 = "getByActId";
 
-		_methodParameterTypes163 = new String[] {
+		_methodParameterTypes163 = new String[] { "long" };
+
+		_methodName164 = "translateResult";
+
+		_methodParameterTypes164 = new String[] {
 				"java.util.Locale", "double", "long"
 			};
 	}
@@ -417,11 +421,17 @@ public class LearningActivityResultLocalServiceClpInvoker {
 
 		if (_methodName162.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes162, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.getByActId(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.getLastEndDateByUserIdCourseId(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName163.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes163, parameterTypes)) {
+			return LearningActivityResultLocalServiceUtil.getByActId(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName164.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes164, parameterTypes)) {
 			return LearningActivityResultLocalServiceUtil.translateResult((java.util.Locale)arguments[0],
 				((Double)arguments[1]).doubleValue(),
 				((Long)arguments[2]).longValue());
@@ -506,4 +516,6 @@ public class LearningActivityResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes162;
 	private String _methodName163;
 	private String[] _methodParameterTypes163;
+	private String _methodName164;
+	private String[] _methodParameterTypes164;
 }

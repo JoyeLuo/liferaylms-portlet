@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -134,6 +134,16 @@ public class AuditEntryLocalServiceClpInvoker {
 		_methodParameterTypes147 = new String[] {
 				"long", "long", "java.lang.String", "long", "long",
 				"java.util.Date", "java.util.Date", "int", "int"
+			};
+
+		_methodName148 = "findByclassName_classPK";
+
+		_methodParameterTypes148 = new String[] { "java.lang.String", "long" };
+
+		_methodName149 = "findByclassName_classPK_filterByActions";
+
+		_methodParameterTypes149 = new String[] {
+				"java.lang.String", "long", "java.util.List"
 			};
 	}
 
@@ -287,6 +297,19 @@ public class AuditEntryLocalServiceClpInvoker {
 				((Integer)arguments[8]).intValue());
 		}
 
+		if (_methodName148.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes148, parameterTypes)) {
+			return AuditEntryLocalServiceUtil.findByclassName_classPK((java.lang.String)arguments[0],
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName149.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes149, parameterTypes)) {
+			return AuditEntryLocalServiceUtil.findByclassName_classPK_filterByActions((java.lang.String)arguments[0],
+				((Long)arguments[1]).longValue(),
+				(java.util.List<java.lang.String>)arguments[2]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -334,4 +357,8 @@ public class AuditEntryLocalServiceClpInvoker {
 	private String[] _methodParameterTypes146;
 	private String _methodName147;
 	private String[] _methodParameterTypes147;
+	private String _methodName148;
+	private String[] _methodParameterTypes148;
+	private String _methodName149;
+	private String[] _methodParameterTypes149;
 }

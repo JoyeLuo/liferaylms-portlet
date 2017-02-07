@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -370,7 +370,7 @@ public class CourseLocalServiceClpInvoker {
 		if (_methodName184.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes184, parameterTypes)) {
 			CourseLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
+			
 			return null;
 		}
 
@@ -571,8 +571,6 @@ public class CourseLocalServiceClpInvoker {
 			CourseLocalServiceUtil.editUserInscriptionDates(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(), (java.util.Date)arguments[2],
 				(java.util.Date)arguments[3]);
-
-			return null;
 		}
 
 		throw new UnsupportedOperationException();

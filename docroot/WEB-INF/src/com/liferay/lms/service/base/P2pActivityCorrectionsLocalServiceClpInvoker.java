@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -288,8 +288,6 @@ public class P2pActivityCorrectionsLocalServiceClpInvoker {
 		if (_methodName139.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes139, parameterTypes)) {
 			P2pActivityCorrectionsLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
-			return null;
 		}
 
 		if (_methodName144.equals(name) &&
