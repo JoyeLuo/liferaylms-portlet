@@ -583,7 +583,7 @@ public static String SEPARATOR = "_";
 		if (Validator.isNotNull(id)) {
 			Module module = ModuleLocalServiceUtil.getModule(id);
 			ModuleLocalServiceUtil.deleteModule(module);
-            MultiVMPoolUtil.clear();
+//            MultiVMPoolUtil.clear();
 			SessionMessages.add(request, "module-deleted-successfully");
 		} else {
 			SessionErrors.add(request, "module-error-deleting");
@@ -601,7 +601,7 @@ public static String SEPARATOR = "_";
             if (errors.isEmpty()) {
             	try {
                 	ModuleLocalServiceUtil.updateModule(module);
-                	MultiVMPoolUtil.clear();
+//                	MultiVMPoolUtil.clear();
                 	response.setRenderParameter("view", "");
                 	SessionMessages.add(request, "module-updated-successfully");
             	} catch (Exception cvex) {
@@ -646,7 +646,7 @@ public static String SEPARATOR = "_";
         if (errors.isEmpty()) {
         	try {
             	ModuleLocalServiceUtil.updateModule(module);
-            	MultiVMPoolUtil.clear();
+//            	MultiVMPoolUtil.clear();
             	SessionMessages.add(request, "module-updated-successfully");
         	} catch (Exception cvex) {
         		SessionErrors.add(request, "please-enter-a-unique-code");
