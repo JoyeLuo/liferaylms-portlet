@@ -181,7 +181,8 @@ if(isTablet){%>
 						</liferay-util:include>  	
 <%
 					}else{	
-						List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
+						List<TestQuestion> questions = new ArrayList<TestQuestion>();
+						questions = ListUtil.copy(TestQuestionLocalServiceUtil.getQuestions(actId));
 						if (useBank){
 							
 							LearningActivity bankActivity;
