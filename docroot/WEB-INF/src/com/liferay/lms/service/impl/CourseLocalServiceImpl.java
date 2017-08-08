@@ -178,7 +178,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 
 		for(Group groupCourse:groups)
 		{
-			
+			log.info(groupCourse);
 			
 			Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
 			if(course!=null)
