@@ -258,7 +258,7 @@ public class CourseImpl extends CourseBaseImpl {
 		log.debug("CourseImpl::isLocked::hasGroupUser:" + true);
 		
 		//Si tienes permiso para acceder al curso
-		if(!permissionChecker.hasPermission(this.getGroupCreatedId(), Course.class.getName(), this.getCourseId() , ActionKeys.ACCESS)){
+		if(!permissionChecker.hasPermission(this.getGroupCreatedId(), Course.class.getName(), this.getCourseId() , ActionKeys.VIEW)){
 			log.debug("CourseImpl::isLocked::hasPermissionAccess:" + false);
 			return true;
 		}
