@@ -1,5 +1,6 @@
 package com.liferay.lms;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -135,11 +136,14 @@ public class CreateEdition implements MessageListener {
 		//Creamos el nuevo curso para la edición 
 		Course newCourse = null;  
 		String summary = "";
+		
+		
 		try{
 			summary = AssetEntryLocalServiceUtil.getEntry(Course.class.getName(),course.getCourseId()).getSummary(themeDisplay.getLocale());
-			newCourse = CourseLocalServiceUtil.addCourse(newEditionName, course.getDescription(themeDisplay.getLocale()),summary
+			newCourse = CourseLocalServiceUtil.addCourse(course.getTitle(themeDisplay.getLocale())+"-"+newEditionName, course.getDescription(themeDisplay.getLocale()),summary
 					, "", themeDisplay.getLocale(), today, startDate, endDate, layoutSetPrototypeId, typeSite, serviceContext, course.getCalificationType(), (int)course.getMaxusers(),true);
 			
+			newCourse.setTitle(newEditionName, themeDisplay.getLocale());
 			newCourse.setWelcome(course.getWelcome());
 			newCourse.setWelcomeMsg(course.getWelcomeMsg());
 			newCourse.setWelcomeSubject(course.getWelcomeSubject());
@@ -171,7 +175,7 @@ public class CreateEdition implements MessageListener {
 			entry.setVisible(false);
 			entry.setSummary(summary);
 			AssetEntryLocalServiceUtil.updateAssetEntry(entry);
-			newGroup.setName(newCourse.getTitle(themeDisplay.getLocale(), true));
+			newGroup.setName(course.getTitle(themeDisplay.getLocale(),true)+"-"+newEditionName);
 			newGroup.setDescription(summary);
 			GroupLocalServiceUtil.updateGroup(newGroup);
 			
@@ -265,6 +269,7 @@ public class CreateEdition implements MessageListener {
 		LearningActivity newLearnActivity=null;
 		LearningActivity nuevaLarn = null;
 		boolean canBeLinked = false;
+		List<Long> evaluations = new ArrayList<Long>(); 
 		for(LearningActivity activity:activities){
 			try {
 				
@@ -290,21 +295,28 @@ public class CreateEdition implements MessageListener {
 				
 				if(canBeLinked){
 					newLearnActivity.setLinkedActivityId(activity.getActId());
-				}else{
+				}
+				//TODO Cuando esté preparado la parte de linkar no habrá que copiar todo
+				//else{
 					newLearnActivity.setExtracontent(activity.getExtracontent());
 					newLearnActivity.setTitle(activity.getTitle());
 					newLearnActivity.setDescription(activity.getDescription());
 					newLearnActivity.setTries(activity.getTries());
 					newLearnActivity.setPasspuntuation(activity.getPasspuntuation());
 					newLearnActivity.setDescription(CourseCopyUtil.descriptionFilesClone(activity.getDescription(),newModule.getGroupId(), newLearnActivity.getActId(),themeDisplay.getUserId()));
-				}
+				//}
 				
 				
 				nuevaLarn=LearningActivityLocalServiceUtil.addLearningActivity(newLearnActivity,serviceContext);
 
+				log.error("ACTIVITY EXTRA CONTENT BEFORE "+ newLearnActivity.getExtracontent());
+				
 				log.debug("Learning Activity : " + activity.getTitle(Locale.getDefault())+ " ("+activity.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(activity.getTypeId()).getName())+")");
 				log.debug("+Learning Activity : " + nuevaLarn.getTitle(Locale.getDefault())+ " ("+nuevaLarn.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(nuevaLarn.getTypeId()).getName())+") Can Be Linked: "+canBeLinked);
 				cloneTraceStr += "   Learning Activity: " + nuevaLarn.getTitle(Locale.getDefault())+ " ("+nuevaLarn.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(nuevaLarn.getTypeId()).getName())+") Can Be Linked: "+canBeLinked;
+				
+
+				CourseCopyUtil.cloneActivityFile(activity, nuevaLarn, themeDisplay.getUserId(), serviceContext);
 				
 				
 				long actId = nuevaLarn.getActId();
@@ -318,6 +330,10 @@ public class CreateEdition implements MessageListener {
 							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
 				}
 				
+				if(nuevaLarn.getTypeId() == 8){
+					evaluations.add(nuevaLarn.getActId());
+				}
+				
 				if(actPending){
 					pending.put(actId, activity.getPrecedence());
 				}
@@ -327,7 +343,15 @@ public class CreateEdition implements MessageListener {
 			}
 
 			
+			//TODO Descomentar cuando esté implementado las actividades linkadas.
+			//if(!canBeLinked){
+			cloneTraceStr += CourseCopyUtil.createTestQuestionsAndAnswers(activity, nuevaLarn, newModule, themeDisplay.getUserId(), cloneTraceStr);
+		
+		
+		
 		}
+		
+		
 		
 		//Set the precedences
 		if(pending.size()>0){
@@ -350,6 +374,7 @@ public class CreateEdition implements MessageListener {
 			}
 		}
 		
-		
+		//Extra Content de las evaluaciones
+		CourseCopyUtil.copyEvaluationExtraContent(evaluations, correlationActivities);
 	}	
 }
