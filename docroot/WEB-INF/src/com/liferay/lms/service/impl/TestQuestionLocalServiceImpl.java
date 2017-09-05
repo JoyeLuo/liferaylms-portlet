@@ -22,6 +22,7 @@ import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
 import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
+import com.liferay.lms.learningactivity.testquestion.GenerateQuestionRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.ClpSerializer;
@@ -332,46 +333,8 @@ public class TestQuestionLocalServiceImpl extends TestQuestionLocalServiceBaseIm
 	public List<TestQuestion> generateAleatoryQuestions(long actId, long typeId)
 			throws SystemException {
 		
-		boolean isMultiple = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"isMultiple"));
-		long[] assetCategoryIds = GetterUtil.getLongValues(StringUtil.split(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"categoriesId")));
-		long[] classTypeIds = new long[]{typeId};
-		int maxQuestions = GetterUtil.getInteger(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"random"), 0);
-		
-		AssetEntryQuery entryQuery = new AssetEntryQuery();
-		entryQuery.getAllCategoryIds();
-		List<AssetEntry> banks= new ArrayList<AssetEntry>();
-		List<TestQuestion> questions = new ArrayList<TestQuestion>();
-		List<TestQuestion> sortQuestions = new ArrayList<TestQuestion>();
-		
-		if(!Validator.equals(assetCategoryIds.length, 0)){
-			
-			entryQuery.setAllCategoryIds(assetCategoryIds);
-			entryQuery.setClassTypeIds(classTypeIds);
-			entryQuery.setVisible(true);
-			banks.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
-
-			if(!Validator.equals(banks.size(), 0)){
-				if (isMultiple){
-					for (AssetEntry bank : banks){
-						questions.addAll(TestQuestionLocalServiceUtil.getQuestions(bank.getClassPK()));
-						Collections.shuffle(questions);
-					}
-				}else{
-					Collections.shuffle(banks);
-					questions = TestQuestionLocalServiceUtil.getQuestions(banks.get(0).getClassPK());
-				}
-				
-				List<TestQuestion> questionsCopy = new ArrayList<TestQuestion>(questions);
-				while ( ( maxQuestions > sortQuestions.size() && questionsCopy.size() > 0) || ( maxQuestions == 0 && questionsCopy.size() > 0 ) ) {
-					sortQuestions.add(questionsCopy.get(0));
-					questionsCopy.remove(0);
-				}
-				
-				return sortQuestions;
-			}
-		}
-		
-		return sortQuestions;
+		GenerateQuestionRegistry generateQuestionRegistry = new GenerateQuestionRegistry();
+		return generateQuestionRegistry.generateAleatoryQuestions(actId, typeId);
 	}
 	
 	
