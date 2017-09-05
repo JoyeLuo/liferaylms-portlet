@@ -1,8 +1,5 @@
 package com.liferay.lms.learningactivity.testquestion;
 
-import java.util.List;
-
-import com.liferay.lms.model.TestQuestion;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
@@ -12,8 +9,8 @@ import com.liferay.portal.kernel.util.Validator;
 public class GenerateQuestionRegistry {
 
 	private static ClassLoader _portletClassLoader;
-	private static GenerateQuestion _generateQuestion = new BaseGenerateQuestion();
 	protected static final String _portletID = PropsUtil.get("lms.testquestion.generatequestion.portletid"); 
+	public static GenerateQuestion _generateQuestion = new BaseGenerateQuestion();
 	
 	public static GenerateQuestion _getGenerateQuestion(){
     	
@@ -40,7 +37,7 @@ public class GenerateQuestionRegistry {
     	return _generateQuestion;
     }
 	
-	public List<TestQuestion> generateAleatoryQuestions(long actId, long typeId) throws SystemException {
+	public String generateAleatoryQuestions(long actId, long typeId) throws SystemException {
 
 		_generateQuestion = _getGenerateQuestion();
 		return _generateQuestion.generateAleatoryQuestions(actId, typeId);

@@ -1,8 +1,5 @@
 package com.liferay.lms.learningactivity.testquestion;
 
-import java.util.List;
-
-import com.liferay.lms.model.TestQuestion;
 import com.liferay.portal.kernel.exception.SystemException;
 
 public interface GenerateQuestion {
@@ -16,6 +13,6 @@ public interface GenerateQuestion {
 	 * @return
 	 * @throws SystemException
 	 */
-	public List<TestQuestion> generateAleatoryQuestions(long actId, long typeId) throws SystemException;
+	public String generateAleatoryQuestions(long actId, long typeId) throws SystemException;
 	
 }

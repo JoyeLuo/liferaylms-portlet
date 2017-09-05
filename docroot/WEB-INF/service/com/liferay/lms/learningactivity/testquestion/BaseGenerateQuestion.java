@@ -8,6 +8,8 @@ import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONSerializer;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -19,8 +21,18 @@ import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
 public class BaseGenerateQuestion implements GenerateQuestion{
 
 	@Override
-	public List<TestQuestion> generateAleatoryQuestions(long actId, long typeId) throws SystemException {
+	public String generateAleatoryQuestions(long actId, long typeId) throws SystemException {
 		
+		JSONSerializer serializer = JSONFactoryUtil.createJSONSerializer();
+		serializer.include("actId");
+		serializer.include("text");
+		serializer.include("weight");
+		serializer.include("penalize");
+		serializer.include("questionId");
+		serializer.include("extracontent");
+		serializer.include("questionType");
+		serializer.include("uuid");
+		serializer.exclude("*");
 		boolean isMultiple = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"isMultiple"));
 		long[] assetCategoryIds = GetterUtil.getLongValues(StringUtil.split(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"categoriesId")));
 		long[] classTypeIds = new long[]{typeId};
@@ -30,7 +42,7 @@ public class BaseGenerateQuestion implements GenerateQuestion{
 		entryQuery.getAllCategoryIds();
 		List<AssetEntry> banks= new ArrayList<AssetEntry>();
 		List<TestQuestion> questions = new ArrayList<TestQuestion>();
-		List<TestQuestion> sortQuestions = new ArrayList<TestQuestion>();
+		List<Object> sortQuestions = new ArrayList<Object>();
 		
 		if(!Validator.equals(assetCategoryIds.length, 0)){
 			
@@ -56,11 +68,11 @@ public class BaseGenerateQuestion implements GenerateQuestion{
 					questionsCopy.remove(0);
 				}
 				
-				return sortQuestions;
+				return  serializer.serialize(sortQuestions);
 			}
 		}
 		
-		return sortQuestions;
+		return serializer.serialize(sortQuestions);
 	}
 	
 	

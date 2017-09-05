@@ -1,13 +1,9 @@
 package com.liferay.lms.learningactivity.testquestion;
 
-import java.lang.reflect.Method;
-import java.util.List;
-
-import com.liferay.lms.learningactivity.questiontype.QuestionType;
-import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 
 public class GenerateQuestionClp implements GenerateQuestion{
 
@@ -19,14 +15,13 @@ public class GenerateQuestionClp implements GenerateQuestion{
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<TestQuestion> generateAleatoryQuestions(long actId, long typeId) {
+	public String generateAleatoryQuestions(long actId, long typeId) {
 		
 		Object returnObj = null;
 		
 		try {
-			Method method = QuestionType.class.getMethod("generateAleatoryQuestions", Long.class, Long.class); 
-			returnObj = clp.invoke(new MethodHandler(method, actId, typeId));
+			MethodKey translateMethod = new MethodKey(clp.getClassName(), "generateAleatoryQuestions", long.class, long.class);
+			returnObj = clp.invoke(new MethodHandler(translateMethod, actId, typeId));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -39,7 +34,7 @@ public class GenerateQuestionClp implements GenerateQuestion{
 					" is not a valid exception");
 			}
 		}
-		return ((List<TestQuestion>)returnObj);
+		return (String)returnObj;
 	}
 	
 }

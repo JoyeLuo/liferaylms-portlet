@@ -14,6 +14,7 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.liferay.lms.auditing.AuditConstants;
@@ -23,6 +24,7 @@ import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.learningactivity.testquestion.GenerateQuestionRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.TestQuestion;
+import com.liferay.lms.model.impl.TestQuestionImpl;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.base.TestQuestionLocalServiceBaseImpl;
@@ -35,6 +37,9 @@ import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
@@ -320,8 +325,28 @@ public class TestQuestionLocalServiceImpl extends TestQuestionLocalServiceBaseIm
 	public List<TestQuestion> generateAleatoryQuestions(long actId, long typeId)
 			throws SystemException {
 		
-		GenerateQuestionRegistry generateQuestionRegistry = new GenerateQuestionRegistry();
-		return generateQuestionRegistry.generateAleatoryQuestions(actId, typeId);
+		List<TestQuestion> questions = new ArrayList<TestQuestion>();
+		try{
+			GenerateQuestionRegistry generateQuestionRegistry = new GenerateQuestionRegistry();
+			JSONArray json = JSONFactoryUtil.createJSONArray(generateQuestionRegistry.generateAleatoryQuestions(actId, typeId));
+			for (int i = 0; i < json.length(); i++) {
+				JSONObject o = json.getJSONObject(i);
+				TestQuestion t = new TestQuestionImpl();
+				t.setActId(o.getLong("actId"));
+				t.setExtracontent(o.getString("extracontent"));
+				t.setPenalize(o.getBoolean("penalize"));
+				t.setQuestionId(o.getLong("questionId"));
+				t.setQuestionType(o.getLong("questionType"));
+				t.setText(o.getString("text"));
+				t.setUuid(o.getString("uuid"));
+				t.setWeight(o.getLong("weight"));
+				questions.add(t);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			return questions;
+		}
+		return questions;
 	}
 	
 	
