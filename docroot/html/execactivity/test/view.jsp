@@ -187,7 +187,7 @@ if(isTablet){%>
 						if (useBank){
 							
 							LearningActivity bankActivity;
-							if( learningTry != null && Validator.isXml(learningTry.getTryResultData()) ){
+							if( Validator.isNotNull(learningTry) && Validator.isXml(learningTry.getTryResultData()) ){
 								String tryResultData = learningTry.getTryResultData();
 								Document docQuestions = SAXReaderUtil.read(tryResultData);
 								List<Element> xmlQuestions = docQuestions.getRootElement().elements("question");
@@ -196,9 +196,16 @@ if(isTablet){%>
 								TestQuestion testQuestion = TestQuestionLocalServiceUtil.getTestQuestion(questionId);
 								bankActivity = LearningActivityLocalServiceUtil.getLearningActivity(testQuestion.getActId());
 								questions = TestQuestionLocalServiceUtil.getQuestions(bankActivity.getActId());
+							}else if( !learningTry.getTryResultData().trim().isEmpty() ){
+								GetterUtil.getLong(learningTry.getTryResultData(), 0);
+								long bankActId = GetterUtil.getLong(learningTry.getTryResultData(), 0);
+								bankActivity = LearningActivityLocalServiceUtil.getLearningActivity(bankActId);
+								questions = TestQuestionLocalServiceUtil.getQuestions(bankActivity.getActId());
 							}else{
 								questions = TestQuestionLocalServiceUtil.generateAleatoryQuestions(actId, 0L);
 								bankActivity = LearningActivityLocalServiceUtil.getLearningActivity(questions.get(0).getActId());
+								learningTry.setTryResultData(String.valueOf(bankActivity.getActId()));
+								LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningTry);
 							}		
 							
 							%>
@@ -716,7 +723,7 @@ if(isTablet){%>
 									}
 									qt.setLocale(themeDisplay.getLocale());
 									Document document = null;
-									if (!hasPermissionAccessCourseFinished && Validator.isNotNull(learningTry.getTryResultData())) {
+									if (!hasPermissionAccessCourseFinished && Validator.isXml(learningTry.getTryResultData())) {
 										document = SAXReaderUtil.read(learningTry.getTryResultData());
 									}
 									sb.append(qt.getHtmlView(question.getQuestionId(), themeDisplay, document));
